@@ -1,0 +1,56 @@
+.List {
+  width: 100%;
+  height: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.listContainer {
+  width: 90%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  overflow-y: auto;
+  border-top: 1px solid #52616b;
+  border-bottom: 1px solid #52616b;
+}
+
+.listItem {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  height: 8%;
+  margin-top: 15px;
+  border-bottom: 1px dashed #52616b;
+  cursor: pointer;
+}
+
+.first {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  height: 50%;
+  width: 100%;
+  font-size: 18px;
+}
+
+.second {
+  font-size: 11px;
+  width: 100%;
+  height: 50%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+}
+
+.second p:nth-child(1) {
+  margin-left: 2px;
+}
+
+.second p:nth-child(2) {
+  margin-right: 2px;
+}
