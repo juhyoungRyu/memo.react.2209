@@ -60,17 +60,26 @@ const App = () => {
             }).then((v) => {
               newIdea.title = v;
               swal({
+                className: "swalInputArea",
                 title: "Do you have new Ideas?",
                 buttons: ["Cancel", "Done"],
                 content: {
-                  element: "input",
+                  element: "textarea",
                   attributes: {
-                    placeholder: "Input your Idea's Value",
+                    placeholder: "Input your Idea",
                   },
                 },
               }).then((v) => {
                 newIdea.value = v;
-                console.log(newIdea);
+                let temp = [...memo];
+                temp[temp.length] = {
+                  date: new Date(),
+                  title: newIdea.title,
+                  value: newIdea.value,
+                  key: temp[temp.length - 1].key + 1,
+                  isSelect: false,
+                };
+                setMemo(temp);
               });
             })
           : null}
