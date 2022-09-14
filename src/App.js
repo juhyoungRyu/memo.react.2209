@@ -55,32 +55,74 @@ const App = () => {
                 element: "input",
                 attributes: {
                   placeholder: "Input your Idea's Title",
+                  maxLength: 15,
                 },
               },
-            }).then((v) => {
-              newIdea.title = v;
-              swal({
-                className: "swalInputArea",
-                title: "Do you have new Ideas?",
-                buttons: ["Cancel", "Done"],
-                content: {
-                  element: "textarea",
-                  attributes: {
-                    placeholder: "Input your Idea",
+            }).then((result) => {
+              // 첫 모달에서 Done이었을 경우
+              if (result !== null) {
+                newIdea.title = result;
+                swal({
+                  className: "swalInputArea",
+                  title: "Do you have new Ideas?",
+                  // buttons: ["Cancel", "Done"],
+                  buttons: {
+                    cancel: {
+                      text: "Cancel",
+                      value: null,
+                      visible: true,
+                      className: "",
+                      closeModal: true,
+                    },
+                    confirm: {
+                      text: "OK",
+                      value: true,
+                      visible: true,
+                      className: "",
+                      closeModal: true,
+                    },
                   },
-                },
-              }).then((v) => {
-                newIdea.value = v;
-                let temp = [...memo];
-                temp[temp.length] = {
-                  date: new Date(),
-                  title: newIdea.title,
-                  value: newIdea.value,
-                  key: temp[temp.length - 1].key + 1,
-                  isSelect: false,
-                };
-                setMemo(temp);
-              });
+                  content: {
+                    element: "textarea",
+                    attributes: {
+                      placeholder: "Input your Idea",
+                    },
+                  },
+                })
+                  .then((result) => {
+                    // 두 번째 모달에서 Done이었을 경우
+                    let textareaValue = document.querySelector(
+                      ".swal-content__textarea"
+                    ).value;
+                    if (result !== null) {
+                      newIdea.value = textareaValue;
+                      let temp = [...memo];
+                      temp[temp.length] = {
+                        date: new Date(),
+                        title: newIdea.title,
+                        value: newIdea.value,
+                        key: temp[temp.length - 1].key + 1,
+                        isSelect: false,
+                      };
+                      setMemo(temp);
+                    } else {
+                      // 두 번째 모달에서 Cancel이었을 경우
+                      swal.close();
+                    }
+                  })
+                  .then((result) => {
+                    if (result === undefined) {
+                      swal({
+                        text: "Successfully recorded the idea ✅✅",
+                        icon: "success",
+                        button: "Check!",
+                      });
+                    } else {
+                      // 첫 모달에서 cancel이었을 경우
+                      swal.close();
+                    }
+                  });
+              }
             })
           : null}
       </Main>

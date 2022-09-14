@@ -22,7 +22,13 @@ const List = (props) => {
           >
             <section className="first">{item.title}</section>
             <section className="second">
-              <p>{item.value.substr(0, 11)}</p>
+              <p>
+                {/* {
+                item.value.length > 10
+                  ? item.value.substr(0, 11)
+                  : item.value.substr(0, 4)} */}
+                {item.value}
+              </p>
               <p>
                 {`${
                   item.date.getMonth() + 1

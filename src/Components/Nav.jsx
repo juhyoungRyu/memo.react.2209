@@ -8,7 +8,7 @@ const Nav = (props) => {
   return (
     <div className="Nav">
       <section className="titleContainer">
-        <p className="title">Ideas</p>
+        <p className="title">My Note</p>
         <HiOutlineTrash className="trash" />
       </section>
       <List memo={props.memo} setMemo={props.setMemo} />
