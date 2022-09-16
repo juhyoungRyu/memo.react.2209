@@ -2,7 +2,7 @@ import "./App.css";
 import Nav from "./Components/Nav";
 import Main from "./Components/Main";
 import swal from "sweetalert";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 const App = () => {
   const KEY = "@MEMO";
@@ -13,43 +13,22 @@ const App = () => {
       if (saved !== null) {
         return JSON.parse(saved);
       } else {
-        return [
-          // {
-          //   date: new Date(),
-          //   title: "테스트용 값입니다.",
-          //   value:
-          //     "이 값은 현재 테스트를 진행중인 값이며 db에 저장된 값이 아닙니다",
-          //   key: 1,
-          //   isSelect: true,
-          // },
-          // {
-          //   date: new Date(),
-          //   title: "이주연 최고",
-          //   value: "이주연은 정말 최고야!",
-          //   key: 2,
-          //   isSelect: false,
-          // },
-        ];
+        return [];
       }
     }
   });
 
-  // useEffect(() => {
-  //   const checkMemo = () => {
-  //     const tempMemo = localStorage.getItem(KEY);
-  //     if (tempMemo) {
-  //       setMemo(tempMemo);
-  //       console.log("memo loading");
-  //     }
-
-  //     window.addEventListener("storage", checkMemo);
-  //   };
-  //   return () => {
-  //     window.removeEventListener("storage", checkMemo);
-  //   };
-  // }, []);
-
   const [isOpen, setIsOpen] = useState(false);
+  const [selectMemo, setSelectMemo] = useState(() => {
+    let firstValue = null;
+    memo.map((item) => {
+      if (item.isSelect === true) {
+        firstValue = item;
+      }
+    });
+    return firstValue;
+  });
+
   let newIdea = {};
 
   const openModal = () => {
@@ -70,9 +49,14 @@ const App = () => {
 
   return (
     <div className="App">
-      <Nav openModal={openModal} memo={memo} setMemo={setMemo} />
+      <Nav
+        openModal={openModal}
+        memo={memo}
+        setMemo={setMemo}
+        setSelectMemo={setSelectMemo}
+      />
 
-      <Main>
+      <Main selectMemo={selectMemo}>
         {isOpen
           ? swal({
               title: "Do you have new Ideas?",
@@ -134,7 +118,7 @@ const App = () => {
                       key: temp[temp.length - 1]
                         ? temp[temp.length - 1].key + 1
                         : 0,
-                      isSelect: temp[temp.length - 1] ? false : true,
+                      isSelect: false,
                     };
                     setMemo(temp);
                     saveStorage(temp);

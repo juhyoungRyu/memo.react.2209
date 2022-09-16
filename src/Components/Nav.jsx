@@ -11,7 +11,11 @@ const Nav = (props) => {
         <p className="title">My Note</p>
         <HiOutlineTrash className="trash" />
       </section>
-      <List memo={props.memo} setMemo={props.setMemo} />
+      <List
+        memo={props.memo}
+        setMemo={props.setMemo}
+        setSelectMemo={props.setSelectMemo}
+      />
       <section className="addContainer">
         <div
           className="addBtn"
