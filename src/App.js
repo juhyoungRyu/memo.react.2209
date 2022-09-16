@@ -2,7 +2,7 @@ import "./App.css";
 import Nav from "./Components/Nav";
 import Main from "./Components/Main";
 import swal from "sweetalert";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const App = () => {
   const KEY = "@MEMO";
@@ -14,25 +14,40 @@ const App = () => {
         return JSON.parse(saved);
       } else {
         return [
-          {
-            date: new Date(),
-            title: "테스트용 값입니다.",
-            value:
-              "이 값은 현재 테스트를 진행중인 값이며 db에 저장된 값이 아닙니다",
-            key: 1,
-            isSelect: true,
-          },
-          {
-            date: new Date(),
-            title: "이주연 최고",
-            value: "이주연은 정말 최고야!",
-            key: 2,
-            isSelect: false,
-          },
+          // {
+          //   date: new Date(),
+          //   title: "테스트용 값입니다.",
+          //   value:
+          //     "이 값은 현재 테스트를 진행중인 값이며 db에 저장된 값이 아닙니다",
+          //   key: 1,
+          //   isSelect: true,
+          // },
+          // {
+          //   date: new Date(),
+          //   title: "이주연 최고",
+          //   value: "이주연은 정말 최고야!",
+          //   key: 2,
+          //   isSelect: false,
+          // },
         ];
       }
     }
   });
+
+  // useEffect(() => {
+  //   const checkMemo = () => {
+  //     const tempMemo = localStorage.getItem(KEY);
+  //     if (tempMemo) {
+  //       setMemo(tempMemo);
+  //       console.log("memo loading");
+  //     }
+
+  //     window.addEventListener("storage", checkMemo);
+  //   };
+  //   return () => {
+  //     window.removeEventListener("storage", checkMemo);
+  //   };
+  // }, []);
 
   const [isOpen, setIsOpen] = useState(false);
   let newIdea = {};
@@ -40,6 +55,17 @@ const App = () => {
   const openModal = () => {
     setIsOpen((isOpen) => !isOpen);
     newIdea = { title: "", value: "", date: new Date(), isSelect: false };
+  };
+
+  const createErrorModal = (text) => {
+    swal({
+      icon: "error",
+      text: text,
+    });
+  };
+
+  const saveStorage = (arr) => {
+    localStorage.setItem(KEY, JSON.stringify(arr));
   };
 
   return (
@@ -54,7 +80,8 @@ const App = () => {
               content: {
                 element: "input",
                 attributes: {
-                  placeholder: "Input your Idea's Title",
+                  placeholder:
+                    "Input your New idea's title (maximun 15 letter)",
                   maxLength: 15,
                 },
               },
@@ -88,40 +115,40 @@ const App = () => {
                       placeholder: "Input your Idea",
                     },
                   },
-                })
-                  .then((result) => {
+                }).then((result) => {
+                  let textareaValue = document.querySelector(
+                    ".swal-content__textarea"
+                  ).value;
+                  if (result === true) {
                     // 두 번째 모달에서 Done이었을 경우
-                    let textareaValue = document.querySelector(
-                      ".swal-content__textarea"
-                    ).value;
-                    if (result !== null) {
-                      newIdea.value = textareaValue;
-                      let temp = [...memo];
-                      temp[temp.length] = {
-                        date: new Date(),
-                        title: newIdea.title,
-                        value: newIdea.value,
-                        key: temp[temp.length - 1].key + 1,
-                        isSelect: false,
-                      };
-                      setMemo(temp);
-                    } else {
-                      // 두 번째 모달에서 Cancel이었을 경우
-                      swal.close();
+                    newIdea.value = textareaValue;
+                    if (!memo) {
+                      console.log("memo가 없다면");
+                      setMemo([]);
                     }
-                  })
-                  .then((result) => {
-                    if (result === undefined) {
-                      swal({
-                        text: "Successfully recorded the idea ✅✅",
-                        icon: "success",
-                        button: "Check!",
-                      });
-                    } else {
-                      // 첫 모달에서 cancel이었을 경우
-                      swal.close();
-                    }
-                  });
+                    let temp = [...memo];
+                    temp[temp.length] = {
+                      date: new Date(),
+                      title: newIdea.title,
+                      value: newIdea.value,
+                      key: temp[temp.length - 1]
+                        ? temp[temp.length - 1].key + 1
+                        : 0,
+                      isSelect: temp[temp.length - 1] ? false : true,
+                    };
+                    setMemo(temp);
+                    saveStorage(temp);
+                    setIsOpen(false);
+                    swal({
+                      text: "Successfully recorded the idea ✅✅",
+                      icon: "success",
+                      button: "Check!",
+                    });
+                  } else {
+                    // 두 번째 모달에서 Cancel이었을 경우
+                    createErrorModal("You have canceled writing a note.");
+                  }
+                });
               }
             })
           : null}

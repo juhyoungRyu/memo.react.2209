@@ -9,34 +9,40 @@ const List = (props) => {
   return (
     <div className="List">
       <div className="listContainer">
-        {props.memo.map((item) => (
-          <div
-            className="listItem"
-            key={item.key}
-            onClick={() => setSelect(item.key)}
-            style={
-              item.isSelect
-                ? { borderBottomColor: "#377D71", borderBottomWidth: "2px" }
-                : {}
-            }
-          >
-            <section className="first">{item.title}</section>
-            <section className="second">
-              <p>
-                {/* {
+        {props.memo.length > 0 ? (
+          props.memo.map((item) => (
+            <div
+              className="listItem"
+              key={item.key}
+              onClick={() => setSelect(item.key)}
+              style={
+                item.isSelect
+                  ? { borderBottomColor: "#377D71", borderBottomWidth: "2px" }
+                  : {}
+              }
+            >
+              <section className="first">{item.title}</section>
+              <section className="second">
+                <p>
+                  {/* {
                 item.value.length > 10
                   ? item.value.substr(0, 11)
                   : item.value.substr(0, 4)} */}
-                {item.value}
-              </p>
-              <p>
-                {`${
-                  item.date.getMonth() + 1
-                }월${item.date.getDate()}일 ${item.date.getHours()}시${item.date.getMinutes()}분`}
-              </p>
-            </section>
-          </div>
-        ))}
+                  {item.value}
+                </p>
+                <p>
+                  {`${new Date(item.date).getMonth() + 1}월${new Date(
+                    item.date
+                  ).getDate()}일 ${new Date(item.date).getHours()}시${new Date(
+                    item.date
+                  ).getMinutes()}분`}
+                </p>
+              </section>
+            </div>
+          ))
+        ) : (
+          <small>Nothing here</small>
+        )}
       </div>
     </div>
   );
