@@ -2,7 +2,7 @@ import "./App.css";
 import Nav from "./Components/Nav";
 import Main from "./Components/Main";
 import swal from "sweetalert";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 const App = () => {
   const KEY = "@MEMO";
@@ -19,15 +19,6 @@ const App = () => {
   });
 
   const [isOpen, setIsOpen] = useState(false);
-  const [selectMemo, setSelectMemo] = useState(() => {
-    let firstValue = null;
-    memo.map((item) => {
-      if (item.isSelect === true) {
-        firstValue = item;
-      }
-    });
-    return firstValue;
-  });
 
   let newIdea = {};
 
@@ -49,14 +40,9 @@ const App = () => {
 
   return (
     <div className="App">
-      <Nav
-        openModal={openModal}
-        memo={memo}
-        setMemo={setMemo}
-        setSelectMemo={setSelectMemo}
-      />
+      <Nav openModal={openModal} memo={memo} setMemo={setMemo} />
 
-      <Main selectMemo={selectMemo}>
+      <Main>
         {isOpen
           ? swal({
               title: "Do you have new Ideas?",

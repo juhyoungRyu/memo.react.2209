@@ -12,11 +12,7 @@ const Main = (props) => {
     );
   };
 
-  return (
-    <div className="Main">
-      {props.selectMemo !== null ? view(props.selectMemo) : ""}
-    </div>
-  );
+  return <div className="Main"></div>;
 };
 
 export default Main;
