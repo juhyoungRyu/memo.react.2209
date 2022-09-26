@@ -29,6 +29,7 @@
 .trash {
   font-size: 23px;
   margin-right: 20px;
+  cursor: pointer;
 }
 
 .addContainer {

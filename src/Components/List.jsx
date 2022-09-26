@@ -4,8 +4,6 @@ import React, { useState } from "react";
 const List = (props) => {
   const KEY = "@MEMO";
 
-  const [select, setSelect] = useState(0);
-
   const allSave = (arr) => {
     props.setMemo(arr);
     localStorage.setItem(KEY, JSON.stringify(arr));
@@ -20,15 +18,15 @@ const List = (props) => {
               className="listItem"
               key={item.key}
               onClick={() => {
-                if (item.key !== select) {
+                if (item.key !== props.selectState.select) {
                   let temp = [...props.memo];
                   temp.map((item) =>
                     item.isSelect ? (item.isSelect = false) : null
                   );
-                  temp[item.key].isSelect = true;
-                  setSelect(item.key);
+                  // temp[item.key].isSelect = true;
+                  temp.find((t) => t.key === item.key).isSelect = true;
+                  props.selectState.setSelect(item.key);
                   allSave(temp);
-                  props.setSelectMemo(item);
                 }
               }}
               style={
@@ -44,13 +42,7 @@ const List = (props) => {
                     ? item.value.substr(0, 16)
                     : item.value}
                 </p>
-                <p>
-                  {`${new Date(item.date).getMonth() + 1}월${new Date(
-                    item.date
-                  ).getDate()}일 ${new Date(item.date).getHours()}시${new Date(
-                    item.date
-                  ).getMinutes()}분`}
-                </p>
+                <p>{props.makeDateFormat(item.date, "all")}</p>
               </section>
             </div>
           ))

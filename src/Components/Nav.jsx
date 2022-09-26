@@ -1,5 +1,5 @@
 import "../css/Nav.css";
-import React, { useState } from "react";
+import React from "react";
 import List from "./List";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { HiOutlineTrash } from "react-icons/hi";
@@ -9,12 +9,32 @@ const Nav = (props) => {
     <div className="Nav">
       <section className="titleContainer">
         <p className="title">My Note</p>
-        <HiOutlineTrash className="trash" />
+        <HiOutlineTrash
+          className="trash"
+          onClick={() => {
+            let liveArray = props.memo.filter((item) => item.isSelect !== true);
+            if (!liveArray[0]) {
+              props.selectState.setSelect(null);
+              props.setMemo([]);
+              props.saveStorage([]);
+              return null;
+            } else {
+              liveArray[0].isSelect = true;
+              props.selectState.setSelect(liveArray[0].key);
+              props.setMemo(liveArray);
+              props.saveStorage(liveArray);
+            }
+          }}
+        />
       </section>
       <List
         memo={props.memo}
         setMemo={props.setMemo}
-        setSelectMemo={props.setSelectMemo}
+        makeDateFormat={props.makeDateFormat}
+        selectState={{
+          select: props.selectState.select,
+          setSelect: props.selectState.setSelect,
+        }}
       />
       <section className="addContainer">
         <div
