@@ -1,36 +1,47 @@
 import "../css/Main.css";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { VscEdit } from "react-icons/vsc";
 
 const Main = (props) => {
+  const [title, setTitle] = useState("");
+  const [date, setDate] = useState("");
+  const [value, setValue] = useState("");
+
   const view = (arr) => {
     let item = arr[0];
     if (item !== undefined || null) {
-      return (
-        <div className="selectedItemZone">
-          <p>{item.title}</p>
-          <p>{item.value}</p>
-          <p>{props.makeDateFormat(item.date, "all")}</p>
-        </div>
-      );
+      setTitle(item.title);
+      setDate(props.makeDateFormat(item.date, "all"));
+      setValue(item.value);
     } else {
       return null;
     }
   };
 
+  useEffect(() => {
+    view(props.selected);
+  }, [props.selected]);
+
   return (
     <div className="Main">
       <section className="head">
         <section className="titleZone">
-          <h2 className="mainTextTitle">Test Text</h2>
-          <p className="time">2022년 09월 28일</p>
+          <h2 className="mainTextTitle">{title}</h2>
         </section>
-        <section className="edit">
-          <VscEdit />
+        <section className="sub">
+          <p className="time">last edited : {date}</p>
+          <p className="line">|</p>
+          <VscEdit
+            className="editBtn"
+            onClick={() => {
+              props.setEditOpen(true);
+            }}
+          />
         </section>
       </section>
-      <section className="body"></section>
-      {/* {view(props.selected)} */}
+      <section className="body">
+        <p className="noteValue">{value}</p>
+      </section>
     </div>
   );
 };
