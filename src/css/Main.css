@@ -78,3 +78,9 @@
   cursor: pointer;
   font-size: 18px;
 }
+
+.editInputArea textarea {
+  width: 100%;
+  height: 300px;
+  font-size: 14px;
+}

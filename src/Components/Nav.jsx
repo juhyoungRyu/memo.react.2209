@@ -5,6 +5,8 @@ import { AiOutlinePlusCircle } from "react-icons/ai";
 import { HiOutlineTrash } from "react-icons/hi";
 
 const Nav = (props) => {
+  const KEY = "@MEMO";
+
   return (
     <div className="Nav">
       <section className="titleContainer">
@@ -13,10 +15,10 @@ const Nav = (props) => {
           className="trash"
           onClick={() => {
             let liveArray = props.memo.filter((item) => item.isSelect !== true);
-            if (!liveArray[0]) {
+            if (liveArray.length === 0) {
               props.selectState.setSelect(null);
               props.setMemo([]);
-              props.saveStorage([]);
+              localStorage.removeItem(KEY);
               return null;
             } else {
               liveArray[0].isSelect = true;

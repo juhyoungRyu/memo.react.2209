@@ -2,7 +2,7 @@ import "./App.css";
 import Nav from "./Components/Nav";
 import Main from "./Components/Main";
 import swal from "sweetalert";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 const App = () => {
   const KEY = "@MEMO";
@@ -22,6 +22,9 @@ const App = () => {
     if (typeof window != "undefined") {
       const saved = window.localStorage.getItem(KEY);
       if (saved !== null) {
+        if (saved.length === 0) {
+          return null;
+        }
         let selectedMemo = JSON.parse(saved).filter(
           (item) => item.isSelect === true
         );
@@ -34,10 +37,7 @@ const App = () => {
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const [editOpen, setEditOpen] = useState(false);
-
   let newIdea = {};
-  let editIdea = {};
 
   const openModal = () => {
     setIsOpen((isOpen) => !isOpen);
@@ -76,77 +76,6 @@ const App = () => {
     }
   };
 
-  const editModalOpen = (prevValue) => {
-    // let temp = [...memo];
-    // console.log(temp.find((t) => t.key === prevValue[0].key));
-    swal({
-      title: "Please input your revision",
-      buttons: ["Cancel", "Done"],
-      text: "Input new title",
-      content: {
-        element: "input",
-        attributes: {
-          value: `${prevValue[0].title}`,
-          maxLength: 15,
-        },
-      },
-    }).then((result) => {
-      // 첫 모달에서 Done이었을 경우
-      if (result !== null) {
-        editIdea.title = result;
-        swal({
-          className: "swalInputArea",
-          title: "Please input your revision",
-          // buttons: ["Cancel", "Done"],
-          text: "Input new value",
-          buttons: {
-            cancel: {
-              text: "Cancel",
-              value: null,
-              visible: true,
-              className: "",
-              closeModal: true,
-            },
-            confirm: {
-              text: "OK",
-              value: true,
-              visible: true,
-              className: "",
-              closeModal: true,
-            },
-          },
-          content: {
-            element: "textarea",
-            attributes: {
-              value: `${prevValue[0].value}`,
-            },
-          },
-        }).then((result) => {
-          let textareaEditValue = document.querySelector(
-            ".swal-content__textarea"
-          ).value;
-          if (result === true) {
-            // 두 번째 모달에서 Done이었을 경우
-            editIdea.value = textareaEditValue;
-            let temp = [...memo];
-            setMemo(temp);
-            saveStorage(temp);
-            setIsOpen(false);
-            swal({
-              text: "Successfully edited the idea ✅✅",
-              icon: "success",
-              button: "Check!",
-            });
-          } else {
-            // 두 번째 모달에서 Cancel이었을 경우
-            createErrorModal("You have canceled writing a note.");
-            swal.close();
-          }
-        });
-      }
-    });
-  };
-
   return (
     <div className="App">
       <Nav
@@ -159,9 +88,13 @@ const App = () => {
       />
 
       <Main
+        memo={memo}
+        setMemo={setMemo}
+        saveStorage={saveStorage}
+        createErrorModal={createErrorModal}
         selected={memo.filter((item) => item.isSelect === true)}
-        setEditOpen={setEditOpen}
         makeDateFormat={makeDateFormat}
+        openModal={openModal}
       >
         {isOpen
           ? swal({
@@ -241,10 +174,6 @@ const App = () => {
                 });
               }
             })
-          : null}
-
-        {editOpen
-          ? editModalOpen(memo.filter((item) => item.isSelect === true))
           : null}
       </Main>
     </div>
